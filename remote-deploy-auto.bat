@@ -49,172 +49,172 @@ echo.
 ssh -o ConnectTimeout=10 -o BatchMode=yes %REMOTE_USER%@%REMOTE_IP% "echo 'SSH connection successful'" >nul 2>&1
 if errorlevel 1 (
     echo [93mFirst connection or requires authentication...[0m
-    echo [96mProbando conexión interactiva...[0m
-    ssh -o ConnectTimeout=10 %REMOTE_USER%@%REMOTE_IP% "echo 'Conexión SSH exitosa'"
+    echo [96mTrying interactive connection...[0m
+    ssh -o ConnectTimeout=10 %REMOTE_USER%@%REMOTE_IP% "echo 'SSH connection successful'"
     if errorlevel 1 (
-        echo [91mERROR: No se puede conectar al servidor remoto[0m
-        echo [93mVerifica:[0m
-        echo [93m- IP del servidor: %REMOTE_IP%[0m
-        echo [93m- Usuario: %REMOTE_USER%[0m
-        echo [93m- Que el servidor SSH esté activo[0m
-        echo [93m- Conectividad de red[0m
+        echo [91mERROR: Cannot connect to remote server[0m
+        echo [93mVerify:[0m
+        echo [93m- Server IP: %REMOTE_IP%[0m
+        echo [93m- User: %REMOTE_USER%[0m
+        echo [93m- That SSH server is active[0m
+        echo [93m- Network connectivity[0m
         pause
         exit /b 1
     )
 )
-echo [92m✓ Conexión SSH establecida correctamente[0m
+echo [92m✓ SSH connection established correctly[0m
 
 echo.
-echo [96mIniciando despliegue remoto...[0m
+echo [96mStarting remote deployment...[0m
 echo.
 
-:: Verificar Docker en el servidor remoto
-echo [96mVerificando Docker en el servidor remoto...[0m
+:: Verify Docker on remote server
+echo [96mVerifying Docker on remote server...[0m
 ssh %REMOTE_USER%@%REMOTE_IP% "docker --version" >nul 2>&1
 if errorlevel 1 (
-    echo [91mERROR: Docker no está instalado en el servidor remoto[0m
-    echo [93mInstala Docker en el servidor Linux:[0m
+    echo [91mERROR: Docker is not installed on remote server[0m
+    echo [93mInstall Docker on Linux server:[0m
     echo [93mcurl -fsSL https://get.docker.com -o get-docker.sh[0m
     echo [93msudo sh get-docker.sh[0m
     pause
     exit /b 1
 )
-echo [92m✓ Docker está disponible en el servidor remoto[0m
+echo [92m✓ Docker is available on remote server[0m
 
-:: Verificar Git en el servidor remoto
-echo [96mVerificando Git en el servidor remoto...[0m
+:: Verify Git on remote server
+echo [96mVerifying Git on remote server...[0m
 ssh %REMOTE_USER%@%REMOTE_IP% "git --version" >nul 2>&1
 if errorlevel 1 (
-    echo [91mERROR: Git no está instalado en el servidor remoto[0m
-    echo [93mInstala Git en el servidor Linux:[0m
-    echo [93msudo apt update ^&^& sudo apt install -y git  # Para Ubuntu/Debian[0m
-    echo [93msudo yum install -y git                      # Para CentOS/RHEL[0m
+    echo [91mERROR: Git is not installed on remote server[0m
+    echo [93mInstall Git on Linux server:[0m
+    echo [93msudo apt update ^&^& sudo apt install -y git  # For Ubuntu/Debian[0m
+    echo [93msudo yum install -y git                      # For CentOS/RHEL[0m
     pause
     exit /b 1
 )
-echo [92m✓ Git está disponible en el servidor remoto[0m
+echo [92m✓ Git is available on remote server[0m
 
-:: Verificar Docker daemon en el servidor remoto
-echo [96mVerificando Docker daemon en el servidor remoto...[0m
+:: Verify Docker daemon on remote server
+echo [96mVerifying Docker daemon on remote server...[0m
 ssh %REMOTE_USER%@%REMOTE_IP% "docker info" >nul 2>&1
 if errorlevel 1 (
-    echo [91mERROR: Docker daemon no está ejecutándose en el servidor remoto[0m
-    echo [93mInicia Docker en el servidor:[0m
+    echo [91mERROR: Docker daemon is not running on remote server[0m
+    echo [93mStart Docker on server:[0m
     echo [93msudo systemctl start docker[0m
     echo [93msudo systemctl enable docker[0m
     pause
     exit /b 1
 )
-echo [92m✓ Docker daemon está ejecutándose en el servidor remoto[0m
+echo [92m✓ Docker daemon is running on remote server[0m
 
-:: Verificar Docker Compose en el servidor remoto
-echo [96mVerificando Docker Compose en el servidor remoto...[0m
+:: Verify Docker Compose on remote server
+echo [96mVerifying Docker Compose on remote server...[0m
 ssh %REMOTE_USER%@%REMOTE_IP% "docker-compose --version || docker compose version" >nul 2>&1
 if errorlevel 1 (
-    echo [91mERROR: Docker Compose no está instalado en el servidor remoto[0m
-    echo [93mInstala Docker Compose en el servidor:[0m
-    echo [93msudo apt install -y docker-compose-plugin  # Para Ubuntu/Debian recientes[0m
-    echo [93m# O descarga manualmente desde GitHub[0m
+    echo [91mERROR: Docker Compose is not installed on remote server[0m
+    echo [93mInstall Docker Compose on server:[0m
+    echo [93msudo apt install -y docker-compose-plugin  # For recent Ubuntu/Debian[0m
+    echo [93m# Or download manually from GitHub[0m
     pause
     exit /b 1
 )
-echo [92m✓ Docker Compose está disponible en el servidor remoto[0m
+echo [92m✓ Docker Compose is available on remote server[0m
 
-:: Limpiar directorio temporal en el servidor remoto
-echo [96mLimpiando directorio temporal en servidor remoto...[0m
+:: Clean temporary directory on remote server
+echo [96mCleaning temporary directory on remote server...[0m
 ssh %REMOTE_USER%@%REMOTE_IP% "rm -rf %REMOTE_DIR%"
-echo [92m✓ Directorio temporal limpiado[0m
+echo [92m✓ Temporary directory cleaned[0m
 
-:: Clonar repositorio en el servidor remoto
-echo [96mClonando repositorio en el servidor remoto...[0m
-echo Repositorio: %REPO_URL%
-echo Destino: %REMOTE_DIR%
+:: Clone repository on remote server
+echo [96mCloning repository on remote server...[0m
+echo Repository: %REPO_URL%
+echo Destination: %REMOTE_DIR%
 echo.
 ssh %REMOTE_USER%@%REMOTE_IP% "git clone %REPO_URL% %REMOTE_DIR%"
 if errorlevel 1 (
-    echo [91mERROR: No se pudo clonar el repositorio en el servidor remoto[0m
-    echo [93mVerifica la conectividad del servidor a internet[0m
+    echo [91mERROR: Could not clone repository on remote server[0m
+    echo [93mVerify server's internet connectivity[0m
     pause
     exit /b 1
 )
-echo [92m✓ Repositorio clonado exitosamente en servidor remoto[0m
+echo [92m✓ Repository cloned successfully on remote server[0m
 
-:: Verificar que existe docker-compose.yml en el servidor remoto
-echo [96mVerificando archivo docker-compose.yml en servidor remoto...[0m
+:: Verify docker-compose.yml exists on remote server
+echo [96mVerifying docker-compose.yml file on remote server...[0m
 ssh %REMOTE_USER%@%REMOTE_IP% "ls %REMOTE_DIR%/docker-compose.yml" >nul 2>&1
 if errorlevel 1 (
-    echo [91mERROR: No se encontró docker-compose.yml en el repositorio[0m
+    echo [91mERROR: docker-compose.yml not found in repository[0m
     pause
     exit /b 1
 )
-echo [92m✓ Archivo docker-compose.yml encontrado en servidor remoto[0m
+echo [92m✓ docker-compose.yml file found on remote server[0m
 
-:: Parar contenedores previos en el servidor remoto
-echo [96mLimpiando contenedores previos en servidor remoto...[0m
+:: Stop previous containers on remote server
+echo [96mCleaning previous containers on remote server...[0m
 ssh %REMOTE_USER%@%REMOTE_IP% "cd %REMOTE_DIR% && docker-compose down" 2>nul
 
-:: Construir y desplegar en el servidor remoto
+:: Build and deploy on remote server
 echo.
 echo [96m======================================================[0m
-echo [96m  Construyendo y desplegando en servidor remoto...[0m
+echo [96m  Building and deploying on remote server...[0m
 echo [96m======================================================[0m
 echo.
 ssh %REMOTE_USER%@%REMOTE_IP% "cd %REMOTE_DIR% && docker-compose up -d --build"
 if errorlevel 1 (
     echo.
-    echo [91mERROR: Falló el despliegue con Docker Compose en servidor remoto[0m
-    echo [93mRevisa los logs anteriores para más detalles[0m
+    echo [91mERROR: Docker Compose deployment failed on remote server[0m
+    echo [93mCheck the logs above for more details[0m
     pause
     exit /b 1
 )
 
-:: Esperar unos segundos para que el contenedor se inicie
+:: Wait a few seconds for the container to start
 echo.
-echo [96mEsperando que la aplicación se inicie en servidor remoto...[0m
+echo [96mWaiting for application to start on remote server...[0m
 timeout /t 8 /nobreak >nul
 
-:: Verificar que el contenedor está ejecutándose en el servidor remoto
-echo [96mVerificando estado del contenedor en servidor remoto...[0m
+:: Verify that the container is running on remote server
+echo [96mVerifying container status on remote server...[0m
 ssh %REMOTE_USER%@%REMOTE_IP% "docker ps --filter 'name=x20edge-deploytest-app' --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
 ssh %REMOTE_USER%@%REMOTE_IP% "docker ps --filter 'name=x20edge-deploytest-app'" | findstr "x20edge-deploytest-app" >nul
 if errorlevel 1 (
-    echo [91mWARNING: El contenedor podría no estar ejecutándose correctamente[0m
-    echo [93mVerifica en el servidor con: docker ps[0m
+    echo [91mWARNING: Container might not be running correctly[0m
+    echo [93mVerify on server with: docker ps[0m
 ) else (
-    echo [92m✓ Contenedor ejecutándose correctamente en servidor remoto[0m
+    echo [92m✓ Container running correctly on remote server[0m
 )
 
-:: Mostrar información final
+:: Show final information
 echo.
 echo [92m======================================================[0m
-echo [92m  ¡DESPLIEGUE REMOTO COMPLETADO EXITOSAMENTE![0m
+echo [92m  REMOTE DEPLOYMENT COMPLETED SUCCESSFULLY![0m
 echo [92m======================================================[0m
 echo.
-echo [96mInformación de la aplicación:[0m
+echo [96mApplication information:[0m
 echo   🌐 URL: [97mhttp://%REMOTE_IP%:%APP_PORT%[0m
-echo   🖥️  Servidor: [97m%REMOTE_USER%@%REMOTE_IP%[0m
-echo   📁 Directorio remoto: [97m%REMOTE_DIR%[0m
-echo   🏷️  Imagen Docker: [97mdeploytest:latest[0m
+echo   🖥️  Server: [97m%REMOTE_USER%@%REMOTE_IP%[0m
+echo   📁 Remote directory: [97m%REMOTE_DIR%[0m
+echo   🏷️  Docker Image: [97mdeploytest:latest[0m
 echo.
-echo [96mComandos útiles (ejecutar desde este Windows):[0m
-echo   Ver logs:           [97mssh %REMOTE_USER%@%REMOTE_IP% "cd %REMOTE_DIR% && docker-compose logs -f"[0m
-echo   Parar aplicación:   [97mssh %REMOTE_USER%@%REMOTE_IP% "cd %REMOTE_DIR% && docker-compose down"[0m
-echo   Reiniciar:          [97mssh %REMOTE_USER%@%REMOTE_IP% "cd %REMOTE_DIR% && docker-compose restart"[0m
-echo   Ver contenedores:   [97mssh %REMOTE_USER%@%REMOTE_IP% "docker ps"[0m
-echo   Acceso SSH:         [97mssh %REMOTE_USER%@%REMOTE_IP%[0m
+echo [96mUseful commands (run from this Windows):[0m
+echo   View logs:          [97mssh %REMOTE_USER%@%REMOTE_IP% "cd %REMOTE_DIR% && docker-compose logs -f"[0m
+echo   Stop application:   [97mssh %REMOTE_USER%@%REMOTE_IP% "cd %REMOTE_DIR% && docker-compose down"[0m
+echo   Restart:            [97mssh %REMOTE_USER%@%REMOTE_IP% "cd %REMOTE_DIR% && docker-compose restart"[0m
+echo   View containers:    [97mssh %REMOTE_USER%@%REMOTE_IP% "docker ps"[0m
+echo   SSH access:         [97mssh %REMOTE_USER%@%REMOTE_IP%[0m
 echo.
 
-:: Preguntar si abrir en navegador
-set /p OPEN_BROWSER="¿Abrir la aplicación remota en el navegador? (S/N): "
-if /i "!OPEN_BROWSER!"=="S" (
+:: Ask if open in browser
+set /p OPEN_BROWSER="Open remote application in browser? (Y/N): "
+if /i "!OPEN_BROWSER!"=="Y" (
     start http://%REMOTE_IP%:%APP_PORT%
-    echo [92m✓ Abriendo navegador con URL remota...[0m
+    echo [92m✓ Opening browser with remote URL...[0m
 )
 
 echo.
-echo [93mNOTA: La aplicación está ejecutándose en el servidor remoto[0m
-echo [93mEl directorio temporal se mantendrá en: %REMOTE_DIR%[0m
-echo [93mPuedes eliminarlo desde el servidor cuando ya no lo necesites[0m
+echo [93mNOTE: Application is running on remote server[0m
+echo [93mTemporary directory will remain at: %REMOTE_DIR%[0m
+echo [93mYou can delete it from the server when no longer needed[0m
 echo.
-echo [96mPresiona cualquier tecla para continuar...[0m
+echo [96mPress any key to continue...[0m
 pause >nul
