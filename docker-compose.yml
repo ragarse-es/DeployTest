@@ -1,9 +1,7 @@
-version: "3.8"
-
 services:
   x20edge-deploytest:
     build:
-      context: https://github.com/ragarse-es/DeployTest.git
+      context: .
       dockerfile: Dockerfile
     image: deploytest:latest
     ports:
