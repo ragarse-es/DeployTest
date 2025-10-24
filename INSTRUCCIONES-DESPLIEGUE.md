@@ -3,9 +3,16 @@
 ## 📋 Instrucciones para Despliegue desde Cualquier Dispositivo
 
 ### Requisitos Previos
+
+#### Para Despliegue Local:
 - ✅ **Docker Desktop** instalado y ejecutándose
 - ✅ **Git** instalado
 - ✅ Conexión a Internet
+
+#### Para Despliegue Remoto:
+- ✅ **Cliente SSH** (incluido en Windows 10+)
+- ✅ **Servidor Linux** con Docker y Git instalados
+- ✅ **Acceso SSH** al servidor remoto
 
 ### 🎯 Opción 1: Script Automático Completo (Recomendado)
 
@@ -23,7 +30,7 @@ O manualmente:
 curl -o deploy-simple.bat https://raw.githubusercontent.com/ragarse-es/DeployTest/main/deploy-simple.bat && deploy-simple.bat
 ```
 
-### 🎯 Opción 3: Comandos Manuales
+### 🎯 Opción 3: Comandos Manuales Locales
 ```cmd
 cd %TEMP%
 git clone https://github.com/ragarse-es/DeployTest.git DeployTest-deploy
@@ -31,15 +38,43 @@ cd DeployTest-deploy
 docker-compose up -d --build
 ```
 
+## 🖥️ Despliegue Remoto (SSH a Servidor Linux)
+
+### 🎯 Opción 1: Script Automático Remoto (Recomendado)
+```cmd
+curl -o remote-deploy-auto.bat https://raw.githubusercontent.com/ragarse-es/DeployTest/main/remote-deploy-auto.bat && remote-deploy-auto.bat
+```
+
+**Características:**
+- ✅ Conexión SSH desde Windows a Linux
+- ✅ Verificaciones completas en servidor remoto
+- ✅ Despliegue automático en servidor Linux
+- ✅ IP por defecto: `10.10.10.207`
+- ✅ Usuario por defecto: `admin`
+
+### 🎯 Opción 2: Script Simple Remoto
+```cmd
+curl -o remote-deploy-simple.bat https://raw.githubusercontent.com/ragarse-es/DeployTest/main/remote-deploy-simple.bat && remote-deploy-simple.bat
+```
+
+### 🎯 Opción 3: Comando Manual Remoto
+```cmd
+ssh admin@10.10.10.207 "rm -rf /tmp/deploy-tmp && git clone https://github.com/ragarse-es/DeployTest.git /tmp/deploy-tmp && cd /tmp/deploy-tmp && docker-compose up -d --build"
+```
+
 ---
 
 ## 🎉 Resultado Esperado
 
-Después de ejecutar cualquiera de las opciones:
-
+### Despliegue Local:
 - ✅ **Aplicación funcionando** en: http://localhost:3100
 - ✅ **Imagen Docker creada**: `deploytest:latest`
 - ✅ **Contenedor ejecutándose**: `x20edge-deploytest-app`
+
+### Despliegue Remoto:
+- ✅ **Aplicación funcionando** en: http://[IP_SERVIDOR]:3100
+- ✅ **Imagen Docker creada** en servidor: `deploytest:latest`
+- ✅ **Contenedor ejecutándose** en servidor: `x20edge-deploytest-app`
 
 ---
 
