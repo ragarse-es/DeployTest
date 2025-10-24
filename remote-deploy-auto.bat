@@ -1,13 +1,13 @@
 @echo off
 :: ========================================================================
-:: Script de despliegue automático REMOTO de X20Edge Deploy Test desde GitHub
-:: Requisitos: SSH client (incluido en Windows 10+), Git y Docker en el servidor remoto
-:: Uso: Simplemente ejecutar este archivo .bat
+:: REMOTE automatic deployment script for X20Edge Deploy Test from GitHub
+:: Requirements: SSH client (included in Windows 10+), Git and Docker on remote server
+:: Usage: Simply run this .bat file
 :: ========================================================================
 
 setlocal EnableDelayedExpansion
 
-:: Configuración del servidor remoto
+:: Remote server configuration
 set REMOTE_IP=10.10.10.207
 set REMOTE_USER=admin
 set REPO_URL=https://github.com/ragarse-es/DeployTest.git
@@ -15,40 +15,40 @@ set PROJECT_NAME=DeployTest
 set REMOTE_DIR=/tmp/%PROJECT_NAME%-deploy
 set APP_PORT=3100
 
-:: Colores para consola (usando echo con códigos ANSI)
+:: Console colors (using echo with ANSI codes)
 echo [92m======================================================[0m
-echo [92m  X20Edge Deploy Test - Despliegue Remoto[0m
+echo [92m  X20Edge Deploy Test - Remote Deployment[0m
 echo [92m======================================================[0m
 echo.
 
-echo [96mConfiguración del servidor remoto:[0m
+echo [96mRemote server configuration:[0m
 echo   📍 IP: [97m%REMOTE_IP%[0m
-echo   👤 Usuario: [97m%REMOTE_USER%[0m
-echo   🚀 Puerto aplicación: [97m%APP_PORT%[0m
+echo   👤 User: [97m%REMOTE_USER%[0m
+echo   🚀 Application port: [97m%APP_PORT%[0m
 echo.
 
-:: Verificar si SSH está disponible
-echo [96mVerificando cliente SSH...[0m
+:: Verify if SSH is available
+echo [96mVerifying SSH client...[0m
 ssh -V >nul 2>&1
 if errorlevel 1 (
-    echo [91mERROR: Cliente SSH no está disponible[0m
-    echo [93mEn Windows 10+ SSH debería estar incluido. Si no:[0m
-    echo [93m1. Habilita OpenSSH Client en Configuración Windows[0m
-    echo [93m2. O instala Git Bash que incluye SSH[0m
+    echo [91mERROR: SSH client is not available[0m
+    echo [93mIn Windows 10+ SSH should be included. If not:[0m
+    echo [93m1. Enable OpenSSH Client in Windows Settings[0m
+    echo [93m2. Or install Git Bash which includes SSH[0m
     pause
     exit /b 1
 )
-echo [92m✓ Cliente SSH está disponible[0m
+echo [92m✓ SSH client is available[0m
 
-:: Verificar conectividad SSH
-echo [96mVerificando conectividad SSH al servidor remoto...[0m
-echo [93mSe solicitará la contraseña del usuario %REMOTE_USER%[0m
+:: Verify SSH connectivity
+echo [96mVerifying SSH connectivity to remote server...[0m
+echo [93mPassword for user %REMOTE_USER% will be requested[0m
 echo.
 
-:: Test de conexión SSH simple
-ssh -o ConnectTimeout=10 -o BatchMode=yes %REMOTE_USER%@%REMOTE_IP% "echo 'Conexión SSH exitosa'" >nul 2>&1
+:: Simple SSH connection test
+ssh -o ConnectTimeout=10 -o BatchMode=yes %REMOTE_USER%@%REMOTE_IP% "echo 'SSH connection successful'" >nul 2>&1
 if errorlevel 1 (
-    echo [93mPrimera conexión o requiere autenticación...[0m
+    echo [93mFirst connection or requires authentication...[0m
     echo [96mProbando conexión interactiva...[0m
     ssh -o ConnectTimeout=10 %REMOTE_USER%@%REMOTE_IP% "echo 'Conexión SSH exitosa'"
     if errorlevel 1 (

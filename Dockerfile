@@ -1,28 +1,28 @@
-# Usar Node.js LTS como imagen base
+# Use Node.js LTS as base image
 FROM node:18-alpine
 
-# Establecer directorio de trabajo
+# Set working directory
 WORKDIR /app
 
-# Copiar package.json y package-lock.json (si existe)
+# Copy package.json and package-lock.json (if exists)
 COPY package*.json ./
 
-# Instalar dependencias
+# Install dependencies
 RUN npm ci --only=production
 
-# Copiar el código de la aplicación
+# Copy application code
 COPY . .
 
-# Exponer el puerto 3100
+# Expose port 3100
 EXPOSE 3100
 
-# Crear usuario no-root para seguridad
+# Create non-root user for security
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nodejs -u 1001
 
-# Cambiar la propiedad de los archivos al usuario nodejs
+# Change ownership of files to nodejs user
 RUN chown -R nodejs:nodejs /app
 USER nodejs
 
-# Comando para ejecutar la aplicación
+# Command to run the application
 CMD ["npm", "start"]

@@ -1,74 +1,74 @@
 # X20Edge Deploy Test - Docker
 
-Este proyecto puede ser desplegado directamente desde GitHub usando Docker.
+This project can be deployed directly from GitHub using Docker.
 
-## 🚀 Despliegue Directo desde GitHub
+## 🚀 Direct Deployment from GitHub
 
-### Opción 1: Script Automatizado (Recomendado)
+### Option 1: Automated Script (Recommended)
 
-**Para Windows PowerShell:**
+**For Windows PowerShell:**
 ```powershell
-# Descargar y ejecutar el script
+# Download and execute the script
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ragarse-es/DeployTest/main/deploy-from-github.ps1" -OutFile "deploy-from-github.ps1"
 .\deploy-from-github.ps1
 ```
 
-**Para Linux/Mac:**
+**For Linux/Mac:**
 ```bash
-# Descargar y ejecutar el script
+# Download and execute the script
 curl -o deploy-from-github.sh https://raw.githubusercontent.com/ragarse-es/DeployTest/main/deploy-from-github.sh
 chmod +x deploy-from-github.sh
 ./deploy-from-github.sh
 ```
 
-### Opción 2: Clonando el repositorio manualmente
+### Option 2: Manual repository cloning
 
 ```bash
-# Clonar el repositorio
+# Clone the repository
 git clone https://github.com/ragarse-es/DeployTest.git
 
-# Navegar al directorio
+# Navigate to directory
 cd DeployTest
 
-# Construir y desplegar (con tag personalizado deploytest:latest)
+# Build and deploy (with custom tag deploytest:latest)
 docker-compose up -d --build
 ```
 
-### Opción 3: Build directo con Docker
+### Option 3: Direct Docker build
 
 ```bash
-# Construir desde GitHub directamente
+# Build directly from GitHub
 docker build -t deploytest:latest https://github.com/ragarse-es/DeployTest.git
 
-# Ejecutar el contenedor
+# Run the container
 docker run -d -p 3100:3100 --name x20edge-app deploytest:latest
 ```
 
-## Comandos útiles
+## Useful Commands
 
 ```bash
-# Ver logs de la aplicación
+# View application logs
 docker-compose logs -f
 
-# Parar la aplicación
+# Stop the application
 docker-compose down
 
-# Reconstruir la imagen
+# Rebuild the image
 docker-compose up --build -d
 
-# Ver estado de los contenedores
+# View container status
 docker-compose ps
 ```
 
-## Acceso a la aplicación
+## Application Access
 
-Una vez desplegada, la aplicación estará disponible en:
+Once deployed, the application will be available at:
 - http://localhost:3100
 
-## Características del despliegue
+## Deployment Features
 
-- **Puerto**: 3100
-- **Health Check**: Verificación automática cada 30 segundos
-- **Restart Policy**: Se reinicia automáticamente si falla
-- **Usuario no-root**: Ejecuta con usuario nodejs para seguridad
-- **Imagen optimizada**: Basada en Node.js 18 Alpine (ligera)
+- **Port**: 3100
+- **Health Check**: Automatic verification every 30 seconds
+- **Restart Policy**: Automatically restarts if it fails
+- **Non-root User**: Runs with nodejs user for security
+- **Optimized Image**: Based on Node.js 18 Alpine (lightweight)

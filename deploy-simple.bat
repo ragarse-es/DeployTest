@@ -1,34 +1,34 @@
 @echo off
-:: Despliegue rápido de X20Edge Deploy Test
-:: Requisitos: Docker y Git instalados
+:: Quick deployment of X20Edge Deploy Test
+:: Requirements: Docker and Git installed
 
-echo Desplegando X20Edge Deploy Test desde GitHub...
+echo Deploying X20Edge Deploy Test from GitHub...
 echo.
 
-:: Configuración
+:: Configuration
 set TEMP_DIR=%TEMP%\DeployTest-deploy
 
-:: Limpiar y clonar
+:: Clean and clone
 if exist "%TEMP_DIR%" rmdir /s /q "%TEMP_DIR%"
 git clone https://github.com/ragarse-es/DeployTest.git "%TEMP_DIR%"
 
-:: Desplegar
+:: Deploy
 cd /d "%TEMP_DIR%"
 docker-compose down 2>nul
 docker-compose up -d --build
 
-:: Resultado
+:: Result
 if errorlevel 1 (
-    echo ERROR: Falló el despliegue
+    echo ERROR: Deployment failed
     pause
     exit /b 1
 ) else (
     echo.
-    echo ✓ DESPLIEGUE COMPLETADO!
-    echo ✓ Aplicación disponible en: http://localhost:3100
-    echo ✓ Imagen Docker: deploytest:latest
+    echo ✓ DEPLOYMENT COMPLETED!
+    echo ✓ Application available at: http://localhost:3100
+    echo ✓ Docker Image: deploytest:latest
     echo.
-    echo Para parar: cd "%TEMP_DIR%" ^&^& docker-compose down
+    echo To stop: cd "%TEMP_DIR%" ^&^& docker-compose down
     start http://localhost:3100
 )
 

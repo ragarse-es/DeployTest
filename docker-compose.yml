@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
     container_name: x20edge-deploytest-app
 
-    # Configuración de salud del contenedor
+    # Container health configuration
     healthcheck:
       test:
         [

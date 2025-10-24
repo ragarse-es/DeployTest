@@ -1,36 +1,36 @@
-# 🚀 Despliegue Automático - X20Edge Deploy Test
+# 🚀 Automatic Deployment - X20Edge Deploy Test
 
-## 📋 Instrucciones para Despliegue desde Cualquier Dispositivo
+## 📋 Deployment Instructions from Any Device
 
-### Requisitos Previos
+### Prerequisites
 
-#### Para Despliegue Local:
-- ✅ **Docker Desktop** instalado y ejecutándose
-- ✅ **Git** instalado
-- ✅ Conexión a Internet
+#### For Local Deployment:
+- ✅ **Docker Desktop** installed and running
+- ✅ **Git** installed
+- ✅ Internet Connection
 
-#### Para Despliegue Remoto:
-- ✅ **Cliente SSH** (incluido en Windows 10+)
-- ✅ **Servidor Linux** con Docker y Git instalados
-- ✅ **Acceso SSH** al servidor remoto
+#### For Remote Deployment:
+- ✅ **SSH Client** (included in Windows 10+)
+- ✅ **Linux Server** with Docker and Git installed
+- ✅ **SSH Access** to remote server
 
-### 🎯 Opción 1: Script Automático Completo (Recomendado)
+### 🎯 Option 1: Complete Automatic Script (Recommended)
 
-**Descarga y ejecuta directamente:**
+**Download and execute directly:**
 ```cmd
 curl -o deploy-auto.bat https://raw.githubusercontent.com/ragarse-es/DeployTest/main/deploy-auto.bat && deploy-auto.bat
 ```
 
-O manualmente:
-1. Descargar: https://raw.githubusercontent.com/ragarse-es/DeployTest/main/deploy-auto.bat
-2. Ejecutar el archivo `deploy-auto.bat`
+Or manually:
+1. Download: https://raw.githubusercontent.com/ragarse-es/DeployTest/main/deploy-auto.bat
+2. Execute the `deploy-auto.bat` file
 
-### 🎯 Opción 2: Script Simple
+### 🎯 Option 2: Simple Script
 ```cmd
 curl -o deploy-simple.bat https://raw.githubusercontent.com/ragarse-es/DeployTest/main/deploy-simple.bat && deploy-simple.bat
 ```
 
-### 🎯 Opción 3: Comandos Manuales Locales
+### 🎯 Option 3: Local Manual Commands
 ```cmd
 cd %TEMP%
 git clone https://github.com/ragarse-es/DeployTest.git DeployTest-deploy
@@ -38,62 +38,62 @@ cd DeployTest-deploy
 docker-compose up -d --build
 ```
 
-## 🖥️ Despliegue Remoto (SSH a Servidor Linux)
+## 🖥️ Remote Deployment (SSH to Linux Server)
 
-### 🎯 Opción 1: Script Automático Remoto (Recomendado)
+### 🎯 Option 1: Remote Automatic Script (Recommended)
 ```cmd
 curl -o remote-deploy-auto.bat https://raw.githubusercontent.com/ragarse-es/DeployTest/main/remote-deploy-auto.bat && remote-deploy-auto.bat
 ```
 
-**Características:**
-- ✅ Conexión SSH desde Windows a Linux
-- ✅ Verificaciones completas en servidor remoto
-- ✅ Despliegue automático en servidor Linux
-- ✅ IP por defecto: `10.10.10.207`
-- ✅ Usuario por defecto: `admin`
+**Features:**
+- ✅ SSH connection from Windows to Linux
+- ✅ Complete verifications on remote server
+- ✅ Automatic deployment on Linux server
+- ✅ Default IP: `10.10.10.207`
+- ✅ Default user: `admin`
 
-### 🎯 Opción 2: Script Simple Remoto
+### 🎯 Option 2: Simple Remote Script
 ```cmd
 curl -o remote-deploy-simple.bat https://raw.githubusercontent.com/ragarse-es/DeployTest/main/remote-deploy-simple.bat && remote-deploy-simple.bat
 ```
 
-### 🎯 Opción 3: Comando Manual Remoto
+### 🎯 Option 3: Manual Remote Command
 ```cmd
 ssh admin@10.10.10.207 "rm -rf /tmp/deploy-tmp && git clone https://github.com/ragarse-es/DeployTest.git /tmp/deploy-tmp && cd /tmp/deploy-tmp && docker-compose up -d --build"
 ```
 
 ---
 
-## 🎉 Resultado Esperado
+## 🎉 Expected Result
 
-### Despliegue Local:
-- ✅ **Aplicación funcionando** en: http://localhost:3100
-- ✅ **Imagen Docker creada**: `deploytest:latest`
-- ✅ **Contenedor ejecutándose**: `x20edge-deploytest-app`
+### Local Deployment:
+- ✅ **Application running** at: http://localhost:3100
+- ✅ **Docker image created**: `deploytest:latest`
+- ✅ **Container running**: `x20edge-deploytest-app`
 
-### Despliegue Remoto:
-- ✅ **Aplicación funcionando** en: http://[IP_SERVIDOR]:3100
-- ✅ **Imagen Docker creada** en servidor: `deploytest:latest`
-- ✅ **Contenedor ejecutándose** en servidor: `x20edge-deploytest-app`
+### Remote Deployment:
+- ✅ **Application running** at: http://[SERVER_IP]:3100
+- ✅ **Docker image created** on server: `deploytest:latest`
+- ✅ **Container running** on server: `x20edge-deploytest-app`
 
 ---
 
-## 🔧 Comandos Útiles Posteriores
+## 🔧 Useful Follow-up Commands
 
 ```cmd
-# Ver estado de contenedores
+# View container status
 docker ps
 
-# Ver logs de la aplicación
+# View application logs
 docker logs x20edge-deploytest-app
 
-# Parar la aplicación
+# Stop the application
 docker stop x20edge-deploytest-app
 
-# Ver imágenes Docker
+# View Docker images
 docker images | findstr deploytest
 
-# Eliminar todo (contenedor e imagen)
+# Remove everything (container and image)
 docker rm -f x20edge-deploytest-app
 docker rmi deploytest:latest
 ```
